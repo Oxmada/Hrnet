@@ -1,14 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
-
+import { Routes, Route } from "react-router-dom";
+import CreateEmployee from "../pages/createEmployee";
 
 function Router() {
     return (
         <Routes>
-            <Route>
-                <Route path="/" />
-            </Route>
+            <Route path="/" element={<CreateEmployee />} />
         </Routes>
-    )
+    );
 }
 
 export default Router;
+
