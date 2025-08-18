@@ -1,4 +1,10 @@
+import { useState } from "react";
+import CustomDatePicker from "../components/CustomDatePicker";
+
 function CreateEmployee() {
+    const [birthDate, setBirthDate] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+
     return (
         <div>
             <div className="title">
@@ -7,8 +13,8 @@ function CreateEmployee() {
             <div className="container">
                 <a href="employee-list.html" className="link">View Current Employees</a>
                 <h2 className="subtitle">Create Employee</h2>
-                <form id="create-employee">
 
+                <form id="create-employee">
                     <label htmlFor="first-name" className="label">First Name</label>
                     <input type="text" id="first-name" className="input-field" />
 
@@ -16,10 +22,18 @@ function CreateEmployee() {
                     <input type="text" id="last-name" className="input-field" />
 
                     <label htmlFor="date-of-birth" className="label">Date of Birth</label>
-                    <input id="date-of-birth" type="text" className="input-field" />
+                    <CustomDatePicker
+                        id="date-of-birth"
+                        selectedDate={birthDate}
+                        onChange={setBirthDate}
+                    />
 
                     <label htmlFor="start-date" className="label">Start Date</label>
-                    <input id="start-date" type="text" className="input-field" />
+                    <CustomDatePicker
+                        id="start-date"
+                        selectedDate={startDate}
+                        onChange={setStartDate}
+                    />
 
                     <fieldset className="address">
                         <legend>Address</legend>
@@ -45,10 +59,11 @@ function CreateEmployee() {
                         <option>Human Resources</option>
                         <option>Legal</option>
                     </select>
-                </form>
 
-                <button className="btn">Save</button>
+                    <button type="submit" className="btn">Save</button>
+                </form>
             </div>
+
             <div id="confirmation" className="confirmation">
                 Employee Created!
             </div>
@@ -57,6 +72,7 @@ function CreateEmployee() {
 }
 
 export default CreateEmployee;
+
 
 
 
