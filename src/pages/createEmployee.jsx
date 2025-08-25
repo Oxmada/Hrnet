@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CustomDatePicker from "../components/CustomDatePicker";
 import CustomSelect from "../components/CustomSelect";
+import CustomModal from "../components/CustomModal";
 import { states } from "../data/states";
 
 const departments = [
@@ -17,26 +18,44 @@ function CreateEmployee() {
     const [department, setDepartment] = useState(null);
     const [state, setState] = useState(null);
 
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // TODO: sauvegarder l'employé (Redux, Context ou localStorage)
+
+        setModalOpen(true); // ouvre la modal
+    };
+
     return (
         <div>
             <div className="title">
                 <h1>HRnet</h1>
             </div>
             <div className="container">
-                <a href="employee-list.html" className="link">View Current Employees</a>
+                <a href="employee-list.html" className="link">
+                    View Current Employees
+                </a>
                 <h2 className="subtitle">Create Employee</h2>
 
-                <form id="create-employee">
+                <form id="create-employee" onSubmit={handleSubmit}>
                     {/* First name */}
-                    <label htmlFor="first-name" className="label">First Name</label>
+                    <label htmlFor="first-name" className="label">
+                        First Name
+                    </label>
                     <input type="text" id="first-name" className="input-field" />
 
                     {/* Last name */}
-                    <label htmlFor="last-name" className="label">Last Name</label>
+                    <label htmlFor="last-name" className="label">
+                        Last Name
+                    </label>
                     <input type="text" id="last-name" className="input-field" />
 
                     {/* Birth Date */}
-                    <label htmlFor="date-of-birth" className="label">Date of Birth</label>
+                    <label htmlFor="date-of-birth" className="label">
+                        Date of Birth
+                    </label>
                     <CustomDatePicker
                         id="date-of-birth"
                         selectedDate={birthDate}
@@ -44,7 +63,9 @@ function CreateEmployee() {
                     />
 
                     {/* Start Date */}
-                    <label htmlFor="start-date" className="label">Start Date</label>
+                    <label htmlFor="start-date" className="label">
+                        Start Date
+                    </label>
                     <CustomDatePicker
                         id="start-date"
                         selectedDate={startDate}
@@ -55,14 +76,20 @@ function CreateEmployee() {
                     <fieldset className="address">
                         <legend>Address</legend>
 
-                        <label htmlFor="street" className="label">Street</label>
+                        <label htmlFor="street" className="label">
+                            Street
+                        </label>
                         <input id="street" type="text" className="input-field" />
 
-                        <label htmlFor="city" className="label">City</label>
+                        <label htmlFor="city" className="label">
+                            City
+                        </label>
                         <input id="city" type="text" className="input-field" />
 
                         {/* State Select */}
-                        <label htmlFor="state" className="label">State</label>
+                        <label htmlFor="state" className="label">
+                            State
+                        </label>
                         <CustomSelect
                             options={states}
                             getOptionLabel={(option) => option.name}
@@ -71,12 +98,16 @@ function CreateEmployee() {
                             onChange={setState}
                         />
 
-                        <label htmlFor="zip-code" className="label">Zip Code</label>
+                        <label htmlFor="zip-code" className="label">
+                            Zip Code
+                        </label>
                         <input id="zip-code" type="number" className="input-field" />
                     </fieldset>
 
                     {/* Department Select */}
-                    <label htmlFor="department" className="label">Department</label>
+                    <label htmlFor="department" className="label">
+                        Department
+                    </label>
                     <CustomSelect
                         options={departments}
                         getOptionLabel={(option) => option.label}
@@ -85,18 +116,26 @@ function CreateEmployee() {
                         onChange={setDepartment}
                     />
 
-                    <button type="submit" className="btn">Save</button>
+                    <button type="submit" className="btn">
+                        Save
+                    </button>
                 </form>
             </div>
 
-            <div id="confirmation" className="confirmation">
+            {/* Modal de confirmation */}
+            <CustomModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                title="Success"
+            >
                 Employee Created!
-            </div>
+            </CustomModal>
         </div>
     );
 }
 
 export default CreateEmployee;
+
 
 
 
