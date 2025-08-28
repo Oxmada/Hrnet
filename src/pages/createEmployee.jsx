@@ -29,8 +29,8 @@ function CreateEmployee() {
         const newEmployee = {
             firstName: document.getElementById("first-name").value,
             lastName: document.getElementById("last-name").value,
-            birthDate,
-            startDate,
+            birthDate: birthDate ? birthDate.toISOString().split("T")[0] : null,
+            startDate: startDate ? startDate.toISOString().split("T")[0] : null,
             street: document.getElementById("street").value,
             city: document.getElementById("city").value,
             state,
@@ -127,6 +127,7 @@ function CreateEmployee() {
 }
 
 export default CreateEmployee;
+
 
 
 
