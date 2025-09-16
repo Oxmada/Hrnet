@@ -3,16 +3,10 @@ import CustomDatePicker from "../components/CustomDatePicker";
 import CustomSelect from "../components/CustomSelect";
 import CustomModal from "../components/CustomModal";
 import { states } from "../data/states";
+import { departments } from "../data/departments";
 import { useDispatch } from "react-redux";
 import { addEmployee } from "../redux/employeeSlice";
-
-const departments = [
-    { value: "sales", label: "Sales" },
-    { value: "marketing", label: "Marketing" },
-    { value: "engineering", label: "Engineering" },
-    { value: "hr", label: "Human Resources" },
-    { value: "legal", label: "Legal" },
-];
+import { Link } from "react-router-dom";
 
 function CreateEmployee() {
     const [birthDate, setBirthDate] = useState(null);
@@ -39,7 +33,7 @@ function CreateEmployee() {
         };
 
         dispatch(addEmployee(newEmployee));
-        setModalOpen(true); // ouvre la modal
+        setModalOpen(true);
     };
 
     return (
@@ -48,7 +42,7 @@ function CreateEmployee() {
                 <h1>HRnet</h1>
             </div>
             <div className="container">
-                <a href="/employee-list" className="link">View Current Employees</a>
+                <Link to="/employee-list" className="link">View Current Employees</Link>
                 <h2 className="subtitle">Create Employee</h2>
 
                 <form id="create-employee" onSubmit={handleSubmit}>
@@ -127,6 +121,7 @@ function CreateEmployee() {
 }
 
 export default CreateEmployee;
+
 
 
 
