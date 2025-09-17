@@ -32,6 +32,7 @@ function CreateEmployee() {
             department,
         };
 
+        console.log("Dispatching newEmployee:", newEmployee);
         dispatch(addEmployee(newEmployee));
         setModalOpen(true);
     };

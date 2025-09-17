@@ -1,4 +1,3 @@
-// src/data/states.js
 export const states = [
   { name: "Alabama", abbreviation: "AL" },
   { name: "Alaska", abbreviation: "AK" },
