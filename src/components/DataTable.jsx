@@ -1,13 +1,21 @@
 import { useState } from "react";
 
-function DataTable({ data }) {
+function DataTable({
+    data,
+    searchable = true,
+    sortable = true,
+    paginated = true,
+    rowsPerPageOptions = [5, 10, 20],
+    defaultRowsPerPage = 5,
+    className = "",
+}) {
     if (!data || data.length === 0) return <p>No data available</p>;
 
     const columns = Object.keys(data[0]);
 
     const [search, setSearch] = useState("");
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [currentPage, setCurrentPage] = useState(1);
 
     const renderCell = (value) => {
@@ -18,22 +26,27 @@ function DataTable({ data }) {
         return value;
     };
 
-    const filteredData = data.filter((row) =>
-        columns.some((col) =>
-            String(renderCell(row[col])).toLowerCase().includes(search.toLowerCase())
+    const filteredData = searchable
+        ? data.filter((row) =>
+            columns.some((col) =>
+                String(renderCell(row[col])).toLowerCase().includes(search.toLowerCase())
+            )
         )
-    );
+        : data;
 
-    const sortedData = [...filteredData].sort((a, b) => {
-        if (!sortConfig.key) return 0;
-        const aValue = renderCell(a[sortConfig.key]) || "";
-        const bValue = renderCell(b[sortConfig.key]) || "";
-        if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
-        return 0;
-    });
+    const sortedData = sortable
+        ? [...filteredData].sort((a, b) => {
+            if (!sortConfig.key) return 0;
+            const aValue = renderCell(a[sortConfig.key]) || "";
+            const bValue = renderCell(b[sortConfig.key]) || "";
+            if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+            return 0;
+        })
+        : filteredData;
 
     const handleSort = (key) => {
+        if (!sortable) return;
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
             direction = "desc";
@@ -42,35 +55,41 @@ function DataTable({ data }) {
     };
 
     const startIndex = (currentPage - 1) * rowsPerPage;
-    const paginatedData = sortedData.slice(startIndex, startIndex + rowsPerPage);
-    const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+    const paginatedData = paginated
+        ? sortedData.slice(startIndex, startIndex + rowsPerPage)
+        : sortedData;
+    const totalPages = paginated ? Math.ceil(sortedData.length / rowsPerPage) : 1;
 
     return (
-        <div className="data-table">
+        <div className={`data-table ${className}`}>
             <div className="controls">
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => {
-                        setSearch(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                />
+                {searchable && (
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                )}
 
-                <select
-                    value={rowsPerPage}
-                    onChange={(e) => {
-                        setRowsPerPage(Number(e.target.value));
-                        setCurrentPage(1);
-                    }}
-                >
-                    {[5, 10, 20].map((size) => (
-                        <option key={size} value={size}>
-                            Show {size}
-                        </option>
-                    ))}
-                </select>
+                {paginated && (
+                    <select
+                        value={rowsPerPage}
+                        onChange={(e) => {
+                            setRowsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                        }}
+                    >
+                        {rowsPerPageOptions.map((size) => (
+                            <option key={size} value={size}>
+                                Show {size}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
 
             <table>
@@ -79,19 +98,23 @@ function DataTable({ data }) {
                         {columns.map((col) => (
                             <th
                                 key={col}
+                                scope="col"
+                                aria-sort={sortConfig.key === col ? sortConfig.direction : "none"}
                                 onClick={() => handleSort(col)}
                             >
                                 {col}{" "}
                                 {sortConfig.key === col ? (
                                     sortConfig.direction === "asc" ? "▲" : "▼"
-                                ) : ""}
+                                ) : (
+                                    ""
+                                )}
                             </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedData.map((row, i) => (
-                        <tr key={i}>
+                        <tr key={row.id || row.key || i}>
                             {columns.map((col) => (
                                 <td key={col}>{renderCell(row[col])}</td>
                             ))}
@@ -100,28 +123,32 @@ function DataTable({ data }) {
                 </tbody>
             </table>
 
-            <div className="pagination">
-                <button
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
-                <span>
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
-            </div>
+            {paginated && (
+                <div className="pagination">
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
 
 export default DataTable;
+export { DataTable };
+
 
 
 
