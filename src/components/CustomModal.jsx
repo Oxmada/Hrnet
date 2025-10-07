@@ -1,7 +1,5 @@
 import ReactModal from "react-modal";
 
-ReactModal.setAppElement("#root"); // important pour l’accessibilité / A supp si pas de bug
-
 export default function CustomModal({ isOpen, onClose, children }) {
     return (
         <ReactModal
