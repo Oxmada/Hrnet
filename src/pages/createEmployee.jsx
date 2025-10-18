@@ -15,24 +15,29 @@ function CreateEmployee() {
     const [state, setState] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
 
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [street, setStreet] = useState("");
+    const [city, setCity] = useState("");
+    const [zipCode, setZipCode] = useState("");
+
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const newEmployee = {
-            firstName: document.getElementById("first-name").value,
-            lastName: document.getElementById("last-name").value,
+            firstName,
+            lastName,
             birthDate: birthDate ? birthDate.toISOString().split("T")[0] : null,
             startDate: startDate ? startDate.toISOString().split("T")[0] : null,
-            street: document.getElementById("street").value,
-            city: document.getElementById("city").value,
+            street,
+            city,
             state,
-            zipCode: document.getElementById("zip-code").value,
+            zipCode,
             department,
         };
 
-        console.log("Dispatching newEmployee:", newEmployee);
         dispatch(addEmployee(newEmployee));
         setModalOpen(true);
     };
@@ -47,15 +52,24 @@ function CreateEmployee() {
                 <h2 className="subtitle">Create Employee</h2>
 
                 <form id="create-employee" onSubmit={handleSubmit}>
-                    {/* First name */}
                     <label htmlFor="first-name" className="label">First Name</label>
-                    <input type="text" id="first-name" className="input-field" />
+                    <input
+                        type="text"
+                        id="first-name"
+                        className="input-field"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
 
-                    {/* Last name */}
                     <label htmlFor="last-name" className="label">Last Name</label>
-                    <input type="text" id="last-name" className="input-field" />
+                    <input
+                        type="text"
+                        id="last-name"
+                        className="input-field"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
 
-                    {/* Birth Date */}
                     <label htmlFor="date-of-birth" className="label">Date of Birth</label>
                     <CustomDatePicker
                         id="date-of-birth"
@@ -63,7 +77,6 @@ function CreateEmployee() {
                         onChange={setBirthDate}
                     />
 
-                    {/* Start Date */}
                     <label htmlFor="start-date" className="label">Start Date</label>
                     <CustomDatePicker
                         id="start-date"
@@ -71,17 +84,27 @@ function CreateEmployee() {
                         onChange={setStartDate}
                     />
 
-                    {/* Address */}
                     <fieldset className="address">
                         <legend>Address</legend>
 
                         <label htmlFor="street" className="label">Street</label>
-                        <input id="street" type="text" className="input-field" />
+                        <input
+                            id="street"
+                            type="text"
+                            className="input-field"
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
+                        />
 
                         <label htmlFor="city" className="label">City</label>
-                        <input id="city" type="text" className="input-field" />
+                        <input
+                            id="city"
+                            type="text"
+                            className="input-field"
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                        />
 
-                        {/* State Select */}
                         <label htmlFor="state" className="label">State</label>
                         <CustomSelect
                             options={states}
@@ -92,10 +115,15 @@ function CreateEmployee() {
                         />
 
                         <label htmlFor="zip-code" className="label">Zip Code</label>
-                        <input id="zip-code" type="number" className="input-field" />
+                        <input
+                            id="zip-code"
+                            type="number"
+                            className="input-field"
+                            value={zipCode}
+                            onChange={(e) => setZipCode(e.target.value)}
+                        />
                     </fieldset>
 
-                    {/* Department Select */}
                     <label htmlFor="department" className="label">Department</label>
                     <CustomSelect
                         options={departments}
@@ -109,7 +137,6 @@ function CreateEmployee() {
                 </form>
             </div>
 
-            {/* Modal de confirmation */}
             <CustomModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
@@ -122,6 +149,7 @@ function CreateEmployee() {
 }
 
 export default CreateEmployee;
+
 
 
 

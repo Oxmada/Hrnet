@@ -6,7 +6,7 @@ function DataTable({
     sortable = true,
     paginated = true,
     rowsPerPageOptions = [5, 10, 20],
-    defaultRowsPerPage = 5,
+    defaultRowsPerPage = 1,
     className = "",
 }) {
     if (!data || data.length === 0) return <p>No data available</p>;
